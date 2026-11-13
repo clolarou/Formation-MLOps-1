@@ -13,11 +13,29 @@ jobs:
       - uses: actions/checkout@v7.0.1
       # À compléter, dans cet ordre :
       # 1. installer Python, dans une version compatible avec pyproject.toml ;
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
       # 2. installer uv 0.13.5 ;
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.5"
       # 3. installer les dépendances verrouillées ;
+      - name: Install dependencies
+        run: uv sync --locked
       # 4. vérifier le code avec Ruff (src, tests, docs) ;
-      # 5. vérifier la mise en forme sans modifier les fichiers ;
+      - name: Lint with Ruff
+        run: uv run ruff check src tests docs
+      # 5. vérifier la mise en forme sans modifier les fichiers
+      - name: Check formatting
+        run: uv run ruff format --check src tests docs
       # 6. lancer les tests ;
+      - name: Run tests
+        run: uv run python -m pytest
       # 7. construire la documentation, en traitant les avertissements comme des erreurs.
+      - name: Build documentation
+        run: uv run sphinx-build -W -b html docs docs/_build/html
       - name: Run checks
         run: echo "CI à compléter" && exit 1
