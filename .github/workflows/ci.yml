@@ -39,3 +39,17 @@ jobs:
       # 7. construire la documentation, en traitant les avertissements comme des erreurs.
       - name: Build documentation
         run: uv run sphinx-build -W -b html docs docs/_build/html
+      # 8. analyser la sécurité du code avec Bandit ;
+      - name: Security analysis with Bandit
+        run: uv run bandit -c pyproject.toml -r src scripts
+      # 9. détecter le code mort avec Vulture (configuration dans pyproject.toml) ;
+      - name: Dead code detection with Vulture
+        run: uv run vulture
+      # 10. analyser les vulnérabilités des dépendances (uv.lock) avec Trivy.
+      - name: Scan dependencies with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          trivy-config: trivy.yaml
+          version: v0.76.1

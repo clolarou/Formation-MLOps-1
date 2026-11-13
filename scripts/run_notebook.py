@@ -15,7 +15,7 @@ Usage :
 import argparse
 import re
 import shutil
-import subprocess
+import subprocess  # nosec B404
 import sys
 import tempfile
 from pathlib import Path
@@ -71,7 +71,8 @@ def run_notebook(notebook: Path) -> tuple[int, str]:
             "--output-dir",
             str(tmp_dir),
         ]
-        result = subprocess.run(command, check=False, capture_output=True, text=True)
+        # Arguments fixes et sys.executable : aucune entrée non fiable, pas de shell.
+        result = subprocess.run(command, check=False, capture_output=True, text=True)  # nosec B603
         return result.returncode, result.stdout + result.stderr
 
 

@@ -29,6 +29,18 @@ test:
 coverage:
 	uv run python -m pytest --cov=src --cov-report=term-missing --cov-report=html
 
+.PHONY: bandit  ## analyse la sécurité du code avec Bandit
+bandit:
+	uv run bandit -c pyproject.toml -r src scripts
+
+.PHONY: vulture  ## détecte le code mort avec Vulture
+vulture:
+	uv run vulture
+
+.PHONY: trivy  ## analyse les vulnérabilités des dépendances (uv.lock) avec Trivy, installé séparément
+trivy:
+	trivy fs --config trivy.yaml .
+
 .PHONY: install-hooks  ## installe le hook git pre-commit (vérification statique et tests avant chaque commit)
 install-hooks:
 	git config core.hooksPath .githooks && echo "✅ Hook pre-commit installé (.githooks/pre-commit)"
