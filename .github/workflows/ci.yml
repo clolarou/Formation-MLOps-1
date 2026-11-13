@@ -39,5 +39,3 @@ jobs:
       # 7. construire la documentation, en traitant les avertissements comme des erreurs.
       - name: Build documentation
         run: uv run sphinx-build -W -b html docs docs/_build/html
-      - name: Run checks
-        run: echo "CI à compléter" && exit 1
